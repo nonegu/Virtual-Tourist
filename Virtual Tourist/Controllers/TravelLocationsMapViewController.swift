@@ -9,13 +9,18 @@
 import UIKit
 import MapKit
 
-class TravelLocationsMapView: UIViewController {
+class TravelLocationsMapViewController: UIViewController {
 
     @IBOutlet weak var mapView: MKMapView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
     }
 
 
