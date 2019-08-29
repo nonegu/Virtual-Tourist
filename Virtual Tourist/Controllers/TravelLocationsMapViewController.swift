@@ -36,10 +36,11 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     }
 
     func setRegion() {
-        let center = CLLocationCoordinate2D(latitude: fetchedResultsController.fetchedObjects?.last?.latitude ?? 0.0, longitude: fetchedResultsController.fetchedObjects?.last?.longitude ?? 0.0)
-        let span = MKCoordinateSpan(latitudeDelta: fetchedResultsController.fetchedObjects?.last?.latitudeDelta ?? 0.02, longitudeDelta: fetchedResultsController.fetchedObjects?.last?.longitudeDelta ?? 0.02)
+        // when the user opens the app for the first time, there will not be any objects to fetch
+        // the default value of the center is set as Apple HQ
+        let center = CLLocationCoordinate2D(latitude: fetchedResultsController.fetchedObjects?.first?.latitude ?? 37.33182, longitude: fetchedResultsController.fetchedObjects?.first?.longitude ?? -122.03118)
+        let span = MKCoordinateSpan(latitudeDelta: fetchedResultsController.fetchedObjects?.first?.latitudeDelta ?? 0.02, longitudeDelta: fetchedResultsController.fetchedObjects?.first?.longitudeDelta ?? 0.02)
         let region = MKCoordinateRegion(center: center, span: span)
-        print(region)
         mapView.setRegion(region, animated: true)
     }
     
@@ -64,9 +65,10 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         mapView.addAnnotation(annotation)
     }
     
-    // everytime user changes the visible region, a new object is saved.
-    // find a way to store only single value for latestLocation
+    // MARK: Saving the visible region after deleting the latest.
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        deletePreviousLocations()
+        
         let latestLocation = LatestLocation(context: dataController.viewContext)
         let region = mapView.region
         latestLocation.latitude = region.center.latitude
@@ -91,6 +93,19 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
             try fetchedResultsController.performFetch()
         } catch {
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
+    }
+    
+    // MARK: Delete function is used to keep only single value in LatestLocation
+    fileprivate func deletePreviousLocations() {
+        let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "LatestLocation")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: deleteFetch)
+        
+        do {
+            try dataController.viewContext.execute(deleteRequest)
+            try dataController.viewContext.save()
+        } catch {
+            print(error.localizedDescription)
         }
     }
     
