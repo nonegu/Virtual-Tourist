@@ -111,6 +111,10 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
         }
     }
     
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        setupPinsFetchResults()
+    }
+    
     // MARK: Delete function is used to keep only single value in LatestLocation
     func deletePreviousLocations() {
         let deleteFetch = NSFetchRequest<NSFetchRequestResult>(entityName: "LatestLocation")
