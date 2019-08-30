@@ -36,7 +36,10 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = true
+        navigationController?.isNavigationBarHidden = true
+        if mapView.selectedAnnotations.count > 0 {
+            mapView.deselectAnnotation(mapView.selectedAnnotations[0], animated: true)
+        }
     }
 
     func setRegion() {
@@ -57,7 +60,29 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         }
     }
     
+    // MARK: Navigation
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // If this is a PhotoAlbumViewController, we'll configure its `Pin`
+        if let vc = segue.destination as? PhotoAlbumViewController {
+            if let pins = PinsFetchedResultsController.fetchedObjects {
+                // there will be only one selected annotation at a time
+                let annotation = mapView.selectedAnnotations[0]
+                // getting the index of the selected annotation to set pin value in destination VC
+                guard let indexPath = pins.firstIndex(where: { (pin) -> Bool in
+                    pin.latitude == annotation.coordinate.latitude && pin.longitude == annotation.coordinate.longitude
+                }) else {
+                    return
+                }
+                vc.pin = pins[indexPath]
+                vc.dataController = dataController
+            }
+        }
+    }
+    
 }
+
+// MARK: FetchedResultsController delegate methods
 
 extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
     fileprivate func setupLatestLocationFetchResult() {

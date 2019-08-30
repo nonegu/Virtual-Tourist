@@ -84,4 +84,9 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         print("latitude: \(latestLocation.latitude) longitude: \(latestLocation.longitude)")
     }
     
+    #warning("check for the following method when a new pin added")
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        performSegue(withIdentifier: "photoAlbum", sender: nil)
+    }
+    
 }
