@@ -15,6 +15,7 @@
 		B61558C62317C7F500401765 /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61558C52317C7F500401765 /* PhotoAlbumViewController.swift */; };
 		B68419B92317E9A500B8AE9F /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68419B82317E9A500B8AE9F /* DataController.swift */; };
 		B68419BC2317EB0600B8AE9F /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B68419BA2317EB0600B8AE9F /* VirtualTourist.xcdatamodeld */; };
+		B6C1E81F2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		B61558C52317C7F500401765 /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		B68419B82317E9A500B8AE9F /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		B68419BB2317EB0600B8AE9F /* VirtualTourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VirtualTourist.xcdatamodel; sourceTree = "<group>"; };
+		B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TravelLocationsMapViewController+MapViewDelegate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +77,7 @@
 			isa = PBXGroup;
 			children = (
 				B61558B22317C5E200401765 /* TravelLocationsMapViewController.swift */,
+				B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */,
 				B61558C52317C7F500401765 /* PhotoAlbumViewController.swift */,
 			);
 			path = Controllers;
@@ -165,6 +168,7 @@
 				B68419BC2317EB0600B8AE9F /* VirtualTourist.xcdatamodeld in Sources */,
 				B61558C62317C7F500401765 /* PhotoAlbumViewController.swift in Sources */,
 				B61558B12317C5E200401765 /* AppDelegate.swift in Sources */,
+				B6C1E81F2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
