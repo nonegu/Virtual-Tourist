@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedResultsControllerDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -27,7 +27,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         super.viewDidLoad()
         
         setupMapView()
-        FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 10, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
+        setupFetchedResults()
+        // MARK: Get photos for the pins that does not have saved photos.
+        if fetchedResultsController.fetchedObjects?.count == 0 {
+            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 10, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,7 +55,17 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
             print(error!)
             return
         }
-        print(photos)
+        let urls = createPhotoURLsFrom(photos: photos)
+        getPhotoData(urls: urls, completion: handleGetPhotoData(success:error:))
+        
+    }
+    
+    func handleGetPhotoData(success: Bool, error: Error?) {
+        if success {
+            print(true)
+        } else {
+            print(error!)
+        }
     }
     
     func setupMapView() {
@@ -75,4 +89,49 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         mapView.addAnnotation(annotation)
     }
     
+    func getPhotoData(urls: [URL], completion: @escaping (Bool, Error?) -> Void) {
+        for url in urls {
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data else {
+                    completion(false, error!)
+                    return
+                }
+                
+                let photo = Photo(context: self.dataController.viewContext)
+                photo.image = data
+                photo.pin = self.pin
+                try? self.dataController.viewContext.save()
+            }
+            task.resume()
+        }
+        completion(true, nil)
+        
+    }
+    
+    private func createPhotoURLsFrom(photos: [FlickrPhoto], size: String = "q") -> [URL] {
+        var urls = [URL]()
+        for photo in photos {
+            let photoURL = URL(string: "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret)_\(size).jpg")!
+            urls.append(photoURL)
+        }
+        return urls
+    }
+    
+}
+
+extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
+    fileprivate func setupFetchedResults() {
+        let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
+        let predicate = NSPredicate(format: "pin == %@", pin)
+        fetchRequest.predicate = predicate
+        fetchRequest.sortDescriptors = []
+        
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
+    }
 }
