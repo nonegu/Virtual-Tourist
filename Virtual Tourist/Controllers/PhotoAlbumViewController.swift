@@ -27,6 +27,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
         super.viewDidLoad()
         
         setupMapView()
+        FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 10, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,6 +44,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath)
         return cell
+    }
+    
+    func handleGetSearchPhotosResults(photos: [FlickrPhoto]?, error: Error?) {
+        guard let photos = photos else {
+            print(error!)
+            return
+        }
+        print(photos)
     }
     
     func setupMapView() {

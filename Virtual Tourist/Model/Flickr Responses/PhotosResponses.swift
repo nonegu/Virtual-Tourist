@@ -17,7 +17,7 @@ struct PhotoResponses: Codable {
     let currentPage: Int
     let totalPages: Int
     let itemsPerPage: Int
-    let totalPhotos: Int
+    let totalPhotos: String
     let photo: [FlickrPhoto]
     
     enum CodingKeys: String, CodingKey {
