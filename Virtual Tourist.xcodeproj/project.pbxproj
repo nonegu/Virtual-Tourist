@@ -19,6 +19,7 @@
 		B658CEBE2319337600453E07 /* ErrorResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B658CEBD2319337600453E07 /* ErrorResponses.swift */; };
 		B68419B92317E9A500B8AE9F /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68419B82317E9A500B8AE9F /* DataController.swift */; };
 		B68419BC2317EB0600B8AE9F /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B68419BA2317EB0600B8AE9F /* VirtualTourist.xcdatamodeld */; };
+		B6B66EA0231AF3A20034F66A /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B66E9F231AF3A20034F66A /* PhotoCell.swift */; };
 		B6C1E81F2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		B658CEBD2319337600453E07 /* ErrorResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponses.swift; sourceTree = "<group>"; };
 		B68419B82317E9A500B8AE9F /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		B68419BB2317EB0600B8AE9F /* VirtualTourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VirtualTourist.xcdatamodel; sourceTree = "<group>"; };
+		B6B66E9F231AF3A20034F66A /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TravelLocationsMapViewController+MapViewDelegate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 				B61558B02317C5E200401765 /* AppDelegate.swift */,
 				B68419B72317E98C00B8AE9F /* Model */,
 				B61558C72317C7FB00401765 /* Controllers */,
+				B6B66E9E231AF3700034F66A /* View */,
 				B61558B42317C5E200401765 /* Main.storyboard */,
 				B61558BA2317C5E300401765 /* Assets.xcassets */,
 				B61558BC2317C5E300401765 /* LaunchScreen.storyboard */,
@@ -126,6 +129,14 @@
 				B658CEB82319327400453E07 /* Flickr Responses */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B6B66E9E231AF3700034F66A /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B6B66E9F231AF3A20034F66A /* PhotoCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -208,6 +219,7 @@
 				B61558B12317C5E200401765 /* AppDelegate.swift in Sources */,
 				B658CEBC2319331D00453E07 /* PhotosResponses.swift in Sources */,
 				B6C1E81F2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift in Sources */,
+				B6B66EA0231AF3A20034F66A /* PhotoCell.swift in Sources */,
 				B658CEBE2319337600453E07 /* ErrorResponses.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
