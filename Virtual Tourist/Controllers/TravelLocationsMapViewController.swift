@@ -111,8 +111,14 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
         }
     }
     
+    // even the viewContext changes, PinsFetchedResultsController remains the same.
+    // following will perform a new fetch and update PinsFetchedResultsController when viewContext changes
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        setupPinsFetchResults()
+        do {
+            try controller.performFetch()
+        } catch {
+            fatalError("The fetch could not be performed: \(error.localizedDescription)")
+        }
     }
     
     // MARK: Delete function is used to keep only single value in LatestLocation
