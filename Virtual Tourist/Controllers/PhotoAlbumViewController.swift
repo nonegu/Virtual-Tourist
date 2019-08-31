@@ -32,6 +32,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         if fetchedResultsController.fetchedObjects?.count == 0 {
             FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 10, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
         }
+        
+        setupLayout()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -39,6 +41,11 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         
         navigationItem.title = pin.name
         navigationController?.isNavigationBarHidden = false
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        collectionView.collectionViewLayout.invalidateLayout()
     }
     
     func handleGetSearchPhotosResults(photos: [FlickrPhoto]?, error: Error?) {
@@ -78,6 +85,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
         annotation.title = pin.name
         mapView.addAnnotation(annotation)
+    }
+    
+    func setupLayout() {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 1
+        layout.minimumLineSpacing = 4
+        collectionView.collectionViewLayout = layout
     }
     
     func getPhotoData(urls: [URL], completion: @escaping (Bool, Error?) -> Void) {
@@ -127,7 +141,7 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
     }
 }
 
-extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return fetchedResultsController.sections?[0].numberOfObjects ?? 0
@@ -140,6 +154,14 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
             cell.imageView.image = UIImage(data: imageData)
         }
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        let padding: CGFloat = 9
+        let collectionViewSize = collectionView.frame.size.width - padding
+        
+        return CGSize(width: collectionViewSize/3, height: collectionViewSize/3)
     }
     
 }
