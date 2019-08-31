@@ -25,8 +25,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapView.delegate = self
-        print("latitude: \(pin.latitude), longitude: \(pin.longitude)")
+        
+        setupMapView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,6 +43,27 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate, NSFetchedRe
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "photoCell", for: indexPath)
         return cell
+    }
+    
+    func setupMapView() {
+        mapView.delegate = self
+        mapView.isUserInteractionEnabled = false
+        setRegion()
+        addAnnotation()
+    }
+    
+    func setRegion() {
+        let center = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+        let span = MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
+        let region = MKCoordinateRegion(center: center, span: span)
+        mapView.setRegion(region, animated: true)
+    }
+    
+    func addAnnotation() {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+        annotation.title = pin.name
+        mapView.addAnnotation(annotation)
     }
     
 }
