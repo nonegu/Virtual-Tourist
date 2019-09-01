@@ -23,6 +23,12 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     var fetchedResultsController: NSFetchedResultsController<Photo>!
     
+    var selectedItems = [IndexPath]() {
+        didSet {
+            print(self.selectedItems)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -34,6 +40,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         }
         
         setupLayout()
+        collectionView.allowsMultipleSelection = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
