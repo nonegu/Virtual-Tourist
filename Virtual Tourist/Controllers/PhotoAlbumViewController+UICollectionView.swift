@@ -15,7 +15,15 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        // checking if the fetchedResultsController has objects and how many.
+        let count: Int = fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        // if number of objects equal to 0, a label presented.
+        if count == 0 {
+            collectionView.setEmptyMessage("No images found :(")
+        } else {
+            collectionView.restore()
+        }
+        return count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -49,4 +57,25 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         return CGSize(width: collectionViewSize/3, height: collectionViewSize/3)
     }
     
+}
+
+extension UICollectionView {
+    
+    // MARK: Setting a label to show when there are no images to show to the user.
+    func setEmptyMessage(_ message: String) {
+        let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: self.bounds.size.width, height: self.bounds.size.height))
+        messageLabel.text = message
+        messageLabel.textColor = .black
+        messageLabel.numberOfLines = 0;
+        messageLabel.textAlignment = .center;
+        messageLabel.font = UIFont(name: "System", size: 12)
+        messageLabel.sizeToFit()
+        
+        self.backgroundView = messageLabel;
+    }
+    
+    // MARK: Removing the label when there are images to show.
+    func restore() {
+        self.backgroundView = nil
+    }
 }
