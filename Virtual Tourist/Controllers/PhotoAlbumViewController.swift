@@ -30,7 +30,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         setupFetchedResults()
         // MARK: Get photos for the pins that does not have saved photos.
         if fetchedResultsController.fetchedObjects?.count == 0 {
-            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 10, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
+            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
         }
         
         setupLayout()
@@ -125,6 +125,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
 }
 
 extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        if type == .insert {
+            collectionView.insertItems(at: [newIndexPath!])
+        }
+    }
+    
     fileprivate func setupFetchedResults() {
         let fetchRequest: NSFetchRequest<Photo> = Photo.fetchRequest()
         let predicate = NSPredicate(format: "pin == %@", pin)
@@ -148,8 +155,8 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let photo = fetchedResultsController.object(at: indexPath)
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.defaultReuseIdentifier, for: indexPath) as! PhotoCell
+        let photo = fetchedResultsController.object(at: indexPath)
         if let imageData = photo.image {
             cell.imageView.image = UIImage(data: imageData)
         }
