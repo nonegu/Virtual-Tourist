@@ -23,6 +23,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     var fetchedResultsController: NSFetchedResultsController<Photo>!
     
+    var blockOperations = [BlockOperation]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -81,7 +83,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
             dataController.viewContext.delete(photoToDelete)
         }
         try? dataController.viewContext.save()
-        collectionView.deleteItems(at: selectedItems)
     }
     
     func setupMapView() {

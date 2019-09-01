@@ -12,9 +12,30 @@ import CoreData
 extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        if type == .insert {
-            collectionView.insertItems(at: [newIndexPath!])
+        switch type {
+        case .insert:
+            blockOperations.append(BlockOperation(block: {
+                self.collectionView.insertItems(at: [newIndexPath!])
+            }))
+        case .delete:
+            blockOperations.append(BlockOperation(block: {
+                self.collectionView.deleteItems(at: [indexPath!])
+            }))
+        case .update:
+            collectionView.reloadItems(at: [indexPath!])
+        case .move:
+            collectionView.moveItem(at: indexPath!, to: newIndexPath!)
+        default:
+            break
         }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView.performBatchUpdates({
+            for operation in self.blockOperations {
+                operation.start()
+            }
+        }) { (completed) in }
     }
     
     func setupFetchedResults() {
