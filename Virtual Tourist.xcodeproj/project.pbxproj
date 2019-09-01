@@ -19,6 +19,8 @@
 		B658CEBE2319337600453E07 /* ErrorResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = B658CEBD2319337600453E07 /* ErrorResponses.swift */; };
 		B68419B92317E9A500B8AE9F /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68419B82317E9A500B8AE9F /* DataController.swift */; };
 		B68419BC2317EB0600B8AE9F /* VirtualTourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B68419BA2317EB0600B8AE9F /* VirtualTourist.xcdatamodeld */; };
+		B69DD394231BF60F00E1C526 /* PhotoAlbumViewController+NSFetchedResultsControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69DD393231BF60F00E1C526 /* PhotoAlbumViewController+NSFetchedResultsControllerDelegate.swift */; };
+		B69DD396231BF65E00E1C526 /* PhotoAlbumViewController+UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B69DD395231BF65E00E1C526 /* PhotoAlbumViewController+UICollectionView.swift */; };
 		B6B66EA0231AF3A20034F66A /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6B66E9F231AF3A20034F66A /* PhotoCell.swift */; };
 		B6C1E81F2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -38,6 +40,8 @@
 		B658CEBD2319337600453E07 /* ErrorResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorResponses.swift; sourceTree = "<group>"; };
 		B68419B82317E9A500B8AE9F /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		B68419BB2317EB0600B8AE9F /* VirtualTourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VirtualTourist.xcdatamodel; sourceTree = "<group>"; };
+		B69DD393231BF60F00E1C526 /* PhotoAlbumViewController+NSFetchedResultsControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoAlbumViewController+NSFetchedResultsControllerDelegate.swift"; sourceTree = "<group>"; };
+		B69DD395231BF65E00E1C526 /* PhotoAlbumViewController+UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoAlbumViewController+UICollectionView.swift"; sourceTree = "<group>"; };
 		B6B66E9F231AF3A20034F66A /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TravelLocationsMapViewController+MapViewDelegate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +94,8 @@
 				B61558B22317C5E200401765 /* TravelLocationsMapViewController.swift */,
 				B6C1E81E2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift */,
 				B61558C52317C7F500401765 /* PhotoAlbumViewController.swift */,
+				B69DD393231BF60F00E1C526 /* PhotoAlbumViewController+NSFetchedResultsControllerDelegate.swift */,
+				B69DD395231BF65E00E1C526 /* PhotoAlbumViewController+UICollectionView.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -220,6 +226,8 @@
 				B658CEBC2319331D00453E07 /* PhotosResponses.swift in Sources */,
 				B6C1E81F2319043C006CB3BE /* TravelLocationsMapViewController+MapViewDelegate.swift in Sources */,
 				B6B66EA0231AF3A20034F66A /* PhotoCell.swift in Sources */,
+				B69DD396231BF65E00E1C526 /* PhotoAlbumViewController+UICollectionView.swift in Sources */,
+				B69DD394231BF60F00E1C526 /* PhotoAlbumViewController+NSFetchedResultsControllerDelegate.swift in Sources */,
 				B658CEBE2319337600453E07 /* ErrorResponses.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
