@@ -36,6 +36,8 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupPinsFetchResults()
+        loadPersistedAnnotations()
         navigationController?.isNavigationBarHidden = true
         if mapView.selectedAnnotations.count > 0 {
             mapView.deselectAnnotation(mapView.selectedAnnotations[0], animated: true)

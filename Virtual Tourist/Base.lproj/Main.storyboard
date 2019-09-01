@@ -119,7 +119,7 @@
                     <connections>
                         <outlet property="collectionView" destination="2nb-Y9-Pae" id="xbP-JU-UNB"/>
                         <outlet property="mapView" destination="3LY-un-Kjq" id="upg-pi-6k0"/>
-                        <outlet property="newOrRemoveButton" destination="jYE-SF-vXK" id="xYk-TX-qkn"/>
+                        <outlet property="newCollectionButton" destination="jYE-SF-vXK" id="xYk-TX-qkn"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zwr-8o-INR" userLabel="First Responder" sceneMemberID="firstResponder"/>

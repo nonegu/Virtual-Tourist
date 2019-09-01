@@ -14,7 +14,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var newOrRemoveButton: UIButton!
+    @IBOutlet weak var newCollectionButton: UIButton!
     
     /// The pin whose photos are being displayed
     var pin: Pin!
@@ -22,12 +22,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     var dataController: DataController!
     
     var fetchedResultsController: NSFetchedResultsController<Photo>!
-    
-    var selectedItems = [IndexPath]() {
-        didSet {
-            print(self.selectedItems)
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,6 +40,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(handleDelete))
+        navigationItem.rightBarButtonItem?.isEnabled = false
         navigationItem.title = pin.name
         navigationController?.isNavigationBarHidden = false
     }
@@ -71,6 +67,21 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         } else {
             print(error!)
         }
+    }
+    
+    @objc func handleDelete() {
+        photosToDelete(at: collectionView.indexPathsForSelectedItems!)
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        newCollectionButton.isEnabled = true
+    }
+    
+    func photosToDelete(at selectedItems: [IndexPath]) {
+        for indexPath in selectedItems {
+            let photoToDelete = fetchedResultsController.object(at: indexPath)
+            dataController.viewContext.delete(photoToDelete)
+        }
+        try? dataController.viewContext.save()
+        collectionView.deleteItems(at: selectedItems)
     }
     
     func setupMapView() {
