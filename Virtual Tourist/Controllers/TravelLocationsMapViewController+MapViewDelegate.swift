@@ -41,7 +41,7 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
     
     func loadPersistedAnnotations() {
         // when user opens the app, following will load all the annotatiton that has been saved before.
-        if let fetchedPins = PinsFetchedResultsController.fetchedObjects {
+        if let fetchedPins = pinsFetchedResultsController.fetchedObjects {
             if fetchedPins.count > 0 {
                 for pin in fetchedPins {
                     let annotation = MKPointAnnotation()

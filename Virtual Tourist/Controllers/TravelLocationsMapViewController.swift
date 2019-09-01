@@ -15,8 +15,8 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     @IBOutlet weak var mapView: MKMapView!
     
     var dataController: DataController!
-    var LatestLocationFetchedResultController: NSFetchedResultsController<LatestLocation>!
-    var PinsFetchedResultsController: NSFetchedResultsController<Pin>!
+    var latestLocationFetchedResultController: NSFetchedResultsController<LatestLocation>!
+    var pinsFetchedResultsController: NSFetchedResultsController<Pin>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,12 +41,19 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
             mapView.deselectAnnotation(mapView.selectedAnnotations[0], animated: true)
         }
     }
+    
+    // to avoid faulty notifications fetchedresultscontroller should be set to nil
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        latestLocationFetchedResultController = nil
+        pinsFetchedResultsController = nil
+    }
 
     func setRegion() {
         // when the user opens the app for the first time, there will not be any objects to fetch
         // the default value of the center is set as Apple HQ
-        let center = CLLocationCoordinate2D(latitude: LatestLocationFetchedResultController.fetchedObjects?.first?.latitude ?? 37.33182, longitude: LatestLocationFetchedResultController.fetchedObjects?.first?.longitude ?? -122.03118)
-        let span = MKCoordinateSpan(latitudeDelta: LatestLocationFetchedResultController.fetchedObjects?.first?.latitudeDelta ?? 0.02, longitudeDelta: LatestLocationFetchedResultController.fetchedObjects?.first?.longitudeDelta ?? 0.02)
+        let center = CLLocationCoordinate2D(latitude: latestLocationFetchedResultController.fetchedObjects?.first?.latitude ?? 37.33182, longitude: latestLocationFetchedResultController.fetchedObjects?.first?.longitude ?? -122.03118)
+        let span = MKCoordinateSpan(latitudeDelta: latestLocationFetchedResultController.fetchedObjects?.first?.latitudeDelta ?? 0.02, longitudeDelta: latestLocationFetchedResultController.fetchedObjects?.first?.longitudeDelta ?? 0.02)
         let region = MKCoordinateRegion(center: center, span: span)
         mapView.setRegion(region, animated: true)
     }
@@ -65,7 +72,7 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // If this is a PhotoAlbumViewController, we'll configure its `Pin`
         if let vc = segue.destination as? PhotoAlbumViewController {
-            if let pins = PinsFetchedResultsController.fetchedObjects {
+            if let pins = pinsFetchedResultsController.fetchedObjects {
                 // there will be only one selected annotation at a time
                 let annotation = mapView.selectedAnnotations[0]
                 // getting the index of the selected annotation to set pin value in destination VC
@@ -89,10 +96,10 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
         let fetchRequest: NSFetchRequest<LatestLocation> = LatestLocation.fetchRequest()
         fetchRequest.sortDescriptors = []
         
-        LatestLocationFetchedResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        LatestLocationFetchedResultController.delegate = self
+        latestLocationFetchedResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        latestLocationFetchedResultController.delegate = self
         do {
-            try LatestLocationFetchedResultController.performFetch()
+            try latestLocationFetchedResultController.performFetch()
         } catch {
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
         }
@@ -102,10 +109,10 @@ extension TravelLocationsMapViewController: NSFetchedResultsControllerDelegate {
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
         fetchRequest.sortDescriptors = []
         
-        PinsFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
-        PinsFetchedResultsController.delegate = self
+        pinsFetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: dataController.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        pinsFetchedResultsController.delegate = self
         do {
-            try PinsFetchedResultsController.performFetch()
+            try pinsFetchedResultsController.performFetch()
         } catch {
             fatalError("The fetch could not be performed: \(error.localizedDescription)")
         }
