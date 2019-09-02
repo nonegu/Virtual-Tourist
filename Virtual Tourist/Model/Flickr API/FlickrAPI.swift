@@ -31,13 +31,13 @@ class FlickrAPI {
         }
     }
     
-    class func getSearchPhotosResults(latitude: Double, longitude: Double, itemPerPage: Int, page: Int, completion: @escaping ([FlickrPhoto]?, Error?) -> Void) {
+    class func getSearchPhotosResults(latitude: Double, longitude: Double, itemPerPage: Int, page: Int, completion: @escaping (Int?, [FlickrPhoto]?, Error?) -> Void) {
         
         let url = Endpoints.searchPhotosWithCoordinate(latitude: latitude, longitude: longitude, itemPerPage: itemPerPage, page: page).url
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
             guard let data = data else {
                 DispatchQueue.main.async {
-                    completion(nil, error!)
+                    completion(nil, nil, error!)
                 }
                 return
             }
@@ -45,17 +45,17 @@ class FlickrAPI {
             let decoder = JSONDecoder()
             do {
                 let response = try decoder.decode(PhotosResponses.self, from: data)
-                completion(response.photos.photo, nil)
+                completion(response.photos.totalPages, response.photos.photo, nil)
             } catch {
                 do {
                     let errorResponse = try decoder.decode(ErrorResponses.self, from: data)
                     DispatchQueue.main.async {
-                        completion(nil, errorResponse)
+                        completion(nil, nil, errorResponse)
                     }
                 } catch {
                     DispatchQueue.main.async {
                         print(String(data: data, encoding: .utf8)!)
-                        completion(nil, error)
+                        completion(nil, nil, error)
                     }
                 }
             }

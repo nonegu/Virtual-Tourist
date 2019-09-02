@@ -29,7 +29,7 @@ class PhotoAlbumViewController: UIViewController {
     
     var isDownloading = false
     
-    var currentPage = 0
+    var pageNum = 0
     
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     
@@ -41,7 +41,7 @@ class PhotoAlbumViewController: UIViewController {
         // MARK: Get photos for the pins that does not have saved photos.
         if fetchedResultsController.fetchedObjects?.count == 0 {
             isDownloading = true
-            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: currentPage, completion: handleGetSearchPhotosResults(photos:error:))
+            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: pageNum, completion: handleGetSearchPhotosResults(totalPages:photos:error:))
         }
         
         setupLayout()
@@ -66,12 +66,11 @@ class PhotoAlbumViewController: UIViewController {
     @IBAction func newCollectionPressed(_ sender: UIButton) {
         setCollectionViewLoadingState(true)
         isDownloading = true
-        currentPage += 1
-        FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: currentPage, completion: handleGetSearchPhotosResults(photos:error:))
+        FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: pageNum, completion: handleGetSearchPhotosResults(totalPages:photos:error:))
     }
     
     
-    func handleGetSearchPhotosResults(photos: [FlickrPhoto]?, error: Error?) {
+    func handleGetSearchPhotosResults(totalPages: Int?, photos: [FlickrPhoto]?, error: Error?) {
         guard let photos = photos else {
             // if no FlickrPhoto received from the server, no future download will be made
             isDownloading = false
@@ -80,6 +79,12 @@ class PhotoAlbumViewController: UIViewController {
             print(error!)
             return
         }
+        guard let totalPages = totalPages else {
+            print(error!)
+            return
+        }
+        // randomizing page number to fetch different set of images
+        pageNum = Int.random(in: 0...totalPages)
         urls = createPhotoURLsFrom(photos: photos)
         createPlaceholderPhotos(numberOfPhotos: (12 - fetchedResultsController.fetchedObjects!.count))
         getPhotoData(urls: urls, completion: handleGetPhotoData(success:error:))
