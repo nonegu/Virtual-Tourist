@@ -70,7 +70,9 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     func handleGetSearchPhotosResults(photos: [FlickrPhoto]?, error: Error?) {
         guard let photos = photos else {
+            // if no FlickrPhoto received from the server, no future download will be made
             isDownloading = false
+            // collectionView should be reloaded to show "No images found" labelView
             collectionView.reloadData()
             print(error!)
             return
