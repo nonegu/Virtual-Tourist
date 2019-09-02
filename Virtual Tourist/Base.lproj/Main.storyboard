@@ -105,6 +105,9 @@
                                     <constraint firstAttribute="height" constant="44" id="ph8-rD-isJ"/>
                                 </constraints>
                                 <state key="normal" title="New Collection"/>
+                                <connections>
+                                    <action selector="newCollectionPressed:" destination="7ri-hp-5wb" eventType="touchUpInside" id="eGD-9n-Rth"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

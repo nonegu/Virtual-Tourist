@@ -29,6 +29,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     var isDownloading = false
     
+    var currentPage = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,7 +39,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         // MARK: Get photos for the pins that does not have saved photos.
         if fetchedResultsController.fetchedObjects?.count == 0 {
             isDownloading = true
-            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
+            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: currentPage, completion: handleGetSearchPhotosResults(photos:error:))
         }
         
         setupLayout()
@@ -59,6 +61,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
+    @IBAction func newCollectionPressed(_ sender: UIButton) {
+        isDownloading = true
+        currentPage += 1
+        FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: currentPage, completion: handleGetSearchPhotosResults(photos:error:))
+    }
+    
+    
     func handleGetSearchPhotosResults(photos: [FlickrPhoto]?, error: Error?) {
         guard let photos = photos else {
             isDownloading = false
@@ -67,13 +76,13 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
             return
         }
         urls = createPhotoURLsFrom(photos: photos)
-        createPlaceholderPhotos()
+        createPlaceholderPhotos(numberOfPhotos: (12 - fetchedResultsController.fetchedObjects!.count))
         getPhotoData(urls: urls, completion: handleGetPhotoData(success:error:))
         
     }
     
-    func createPlaceholderPhotos() {
-        for _ in urls {
+    func createPlaceholderPhotos(numberOfPhotos: Int) {
+        for _ in 0..<numberOfPhotos {
             let photo = Photo(context: self.dataController.viewContext)
             photo.image = UIImage(named: "placeholder")?.jpegData(compressionQuality: 1.0)
             photo.pin = self.pin

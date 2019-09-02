@@ -22,6 +22,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
             collectionView.setEmptyMessage("No images found :(")
         } else {
             collectionView.restore()
+            newCollectionButton.isEnabled = true
         }
         return count
     }
