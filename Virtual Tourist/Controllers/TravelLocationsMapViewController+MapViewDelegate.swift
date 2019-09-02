@@ -88,4 +88,11 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         performSegue(withIdentifier: "photoAlbum", sender: nil)
     }
     
+    func mapViewDidFinishRenderingMap(_ mapView: MKMapView, fullyRendered: Bool) {
+        if fullyRendered {
+            activityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
+        }
+    }
+    
 }

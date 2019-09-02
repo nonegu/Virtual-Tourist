@@ -13,6 +13,8 @@ import CoreData
 class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
     
     var dataController: DataController!
     var latestLocationFetchedResultController: NSFetchedResultsController<LatestLocation>!
@@ -36,6 +38,8 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
         setupPinsFetchResults()
         loadPersistedAnnotations()
         navigationController?.isNavigationBarHidden = true

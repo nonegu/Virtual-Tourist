@@ -21,6 +21,10 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="jHg-aD-5eG">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </mapView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="gWr-9f-hD6">
+                                <rect key="frame" x="169" y="315" width="37" height="37"/>
+                                <color key="color" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -28,11 +32,14 @@
                             <constraint firstItem="jHg-aD-5eG" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="RAq-Xh-8Bd"/>
                             <constraint firstItem="jHg-aD-5eG" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="SPQ-QJ-KoI"/>
                             <constraint firstItem="jHg-aD-5eG" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="XYV-vU-e42"/>
+                            <constraint firstItem="gWr-9f-hD6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="l9N-zm-Rka"/>
+                            <constraint firstItem="gWr-9f-hD6" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="sH8-eL-ayj"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" id="ebu-Qe-1vA"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="gWr-9f-hD6" id="kDn-jB-DJ4"/>
                         <outlet property="mapView" destination="jHg-aD-5eG" id="1o3-zE-zvN"/>
                         <segue destination="7ri-hp-5wb" kind="show" identifier="photoAlbum" id="L1U-6R-WkQ"/>
                     </connections>
