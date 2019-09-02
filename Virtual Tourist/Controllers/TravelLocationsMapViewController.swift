@@ -34,12 +34,12 @@ class TravelLocationsMapViewController: UIViewController, UIGestureRecognizerDel
         
         setupLatestLocationFetchResult()
         setRegion()
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        activityIndicator.startAnimating()
-        UIApplication.shared.beginIgnoringInteractionEvents()
         setupPinsFetchResults()
         loadPersistedAnnotations()
         navigationController?.isNavigationBarHidden = true

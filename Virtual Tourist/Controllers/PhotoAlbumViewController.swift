@@ -31,6 +31,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     var currentPage = 0
     
+    var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -61,7 +63,29 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
+    fileprivate func setCollectionViewLoadingState(_ isLoading: Bool) {
+        if isLoading {
+            let yAxis = (collectionView.frame.minY) + (collectionView.frame.maxY - collectionView.frame.minY)/2
+            activityIndicator.frame = CGRect(x: collectionView.frame.maxX/2, y: yAxis, width: 20, height: 20)
+            activityIndicator.color = UIColor.darkGray
+            activityIndicator.hidesWhenStopped = true
+            view.addSubview(activityIndicator)
+            DispatchQueue.main.async {
+                self.activityIndicator.startAnimating()
+                UIApplication.shared.beginIgnoringInteractionEvents()
+                self.collectionView.alpha = 0.5
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                UIApplication.shared.endIgnoringInteractionEvents()
+                self.collectionView.alpha = 1.0
+            }
+        }
+    }
+    
     @IBAction func newCollectionPressed(_ sender: UIButton) {
+        setCollectionViewLoadingState(true)
         isDownloading = true
         currentPage += 1
         FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: currentPage, completion: handleGetSearchPhotosResults(photos:error:))
@@ -84,12 +108,14 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     }
     
     func createPlaceholderPhotos(numberOfPhotos: Int) {
-        for _ in 0..<numberOfPhotos {
-            let photo = Photo(context: self.dataController.viewContext)
-            photo.image = UIImage(named: "placeholder")?.jpegData(compressionQuality: 1.0)
-            photo.pin = self.pin
+        if numberOfPhotos > 0{
+            for _ in 0..<numberOfPhotos {
+                let photo = Photo(context: self.dataController.viewContext)
+                photo.image = UIImage(named: "placeholder")?.jpegData(compressionQuality: 1.0)
+                photo.pin = self.pin
+            }
+            try? self.dataController.viewContext.save()
         }
-        try? self.dataController.viewContext.save()
     }
     
     func handleGetPhotoData(success: Bool, error: Error?) {
@@ -98,6 +124,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         } else {
             print(error!)
         }
+        setCollectionViewLoadingState(false)
     }
     
     @objc func handleDelete() {
