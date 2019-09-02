@@ -18,7 +18,7 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         // checking if the fetchedResultsController has objects and how many.
         let count: Int = fetchedResultsController.sections?[section].numberOfObjects ?? 0
         // if number of objects equal to 0, a label presented.
-        if count == 0 {
+        if count == 0 && !isDownloading {
             collectionView.setEmptyMessage("No images found :(")
         } else {
             collectionView.restore()

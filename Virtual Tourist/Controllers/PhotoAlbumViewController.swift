@@ -25,6 +25,10 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     var blockOperations = [BlockOperation]()
     
+    var urls = [URL]()
+    
+    var isDownloading = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,6 +36,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         setupFetchedResults()
         // MARK: Get photos for the pins that does not have saved photos.
         if fetchedResultsController.fetchedObjects?.count == 0 {
+            isDownloading = true
             FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: 1, completion: handleGetSearchPhotosResults(photos:error:))
         }
         
@@ -59,9 +64,19 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
             print(error!)
             return
         }
-        let urls = createPhotoURLsFrom(photos: photos)
+        urls = createPhotoURLsFrom(photos: photos)
+        createPlaceholderPhotos()
         getPhotoData(urls: urls, completion: handleGetPhotoData(success:error:))
         
+    }
+    
+    func createPlaceholderPhotos() {
+        for _ in urls {
+            let photo = Photo(context: self.dataController.viewContext)
+            photo.image = UIImage(named: "placeholder")?.jpegData(compressionQuality: 1.0)
+            photo.pin = self.pin
+        }
+        try? self.dataController.viewContext.save()
     }
     
     func handleGetPhotoData(success: Bool, error: Error?) {
@@ -121,10 +136,15 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
                     completion(false, error!)
                     return
                 }
-                
-                let photo = Photo(context: self.dataController.viewContext)
+                // following will get the item number, and it will be used to updated related photos in CoreData
+                guard let item = urls.firstIndex(where: { (searchUrl) -> Bool in
+                    searchUrl.absoluteString == url.absoluteString
+                }) else {
+                    return
+                }
+                // the section will always be 0, since the database is constructed to hold single section.
+                let photo = self.fetchedResultsController.object(at: IndexPath(item: item, section: 0))
                 photo.image = data
-                photo.pin = self.pin
                 try? self.dataController.viewContext.save()
             }
             task.resume()
