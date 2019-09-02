@@ -32,6 +32,11 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         if let imageData = photo.image {
             cell.imageView.image = UIImage(data: imageData)
         }
+        if isDownloading {
+            cell.activityIndicator.startAnimating()
+        } else {
+            cell.activityIndicator.stopAnimating()
+        }
         return cell
     }
     

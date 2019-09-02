@@ -133,6 +133,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     func getPhotoData(urls: [URL], completion: @escaping (Bool, Error?) -> Void) {
         for url in urls {
+            isDownloading = true
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 guard let data = data else {
                     completion(false, error!)
@@ -149,6 +150,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
                 photo.image = data
                 try? self.dataController.viewContext.save()
             }
+            isDownloading = false
             task.resume()
         }
         completion(true, nil)
