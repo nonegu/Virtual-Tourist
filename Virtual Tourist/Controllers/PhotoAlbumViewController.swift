@@ -61,6 +61,8 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     
     func handleGetSearchPhotosResults(photos: [FlickrPhoto]?, error: Error?) {
         guard let photos = photos else {
+            isDownloading = false
+            collectionView.reloadData()
             print(error!)
             return
         }
