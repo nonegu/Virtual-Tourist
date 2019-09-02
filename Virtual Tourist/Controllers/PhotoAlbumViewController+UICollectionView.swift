@@ -63,6 +63,13 @@ extension PhotoAlbumViewController: UICollectionViewDelegate, UICollectionViewDa
         return CGSize(width: collectionViewSize/3, height: collectionViewSize/3)
     }
     
+    func setupLayout() {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 1
+        layout.minimumLineSpacing = 4
+        collectionView.collectionViewLayout = layout
+    }
+    
 }
 
 extension UICollectionView {

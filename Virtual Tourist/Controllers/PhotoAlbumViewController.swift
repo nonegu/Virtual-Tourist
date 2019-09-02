@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreData
 
-class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
+class PhotoAlbumViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -61,27 +61,6 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView.collectionViewLayout.invalidateLayout()
-    }
-    
-    fileprivate func setCollectionViewLoadingState(_ isLoading: Bool) {
-        if isLoading {
-            let yAxis = (collectionView.frame.minY) + (collectionView.frame.maxY - collectionView.frame.minY)/2
-            activityIndicator.frame = CGRect(x: collectionView.frame.maxX/2, y: yAxis, width: 20, height: 20)
-            activityIndicator.color = UIColor.darkGray
-            activityIndicator.hidesWhenStopped = true
-            view.addSubview(activityIndicator)
-            DispatchQueue.main.async {
-                self.activityIndicator.startAnimating()
-                UIApplication.shared.beginIgnoringInteractionEvents()
-                self.collectionView.alpha = 0.5
-            }
-        } else {
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-                UIApplication.shared.endIgnoringInteractionEvents()
-                self.collectionView.alpha = 1.0
-            }
-        }
     }
     
     @IBAction func newCollectionPressed(_ sender: UIButton) {
@@ -141,67 +120,25 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         try? dataController.viewContext.save()
     }
     
-    func setupMapView() {
-        mapView.delegate = self
-        mapView.isUserInteractionEnabled = false
-        setRegion()
-        addAnnotation()
-    }
-    
-    func setRegion() {
-        let center = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
-        let span = MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02)
-        let region = MKCoordinateRegion(center: center, span: span)
-        mapView.setRegion(region, animated: true)
-    }
-    
-    func addAnnotation() {
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
-        annotation.title = pin.name
-        mapView.addAnnotation(annotation)
-    }
-    
-    func setupLayout() {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumInteritemSpacing = 1
-        layout.minimumLineSpacing = 4
-        collectionView.collectionViewLayout = layout
-    }
-    
-    func getPhotoData(urls: [URL], completion: @escaping (Bool, Error?) -> Void) {
-        for url in urls {
-            isDownloading = true
-            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard let data = data else {
-                    completion(false, error!)
-                    return
-                }
-                // following will get the item number, and it will be used to updated related photos in CoreData
-                guard let item = urls.firstIndex(where: { (searchUrl) -> Bool in
-                    searchUrl.absoluteString == url.absoluteString
-                }) else {
-                    return
-                }
-                // the section will always be 0, since the database is constructed to hold single section.
-                let photo = self.fetchedResultsController.object(at: IndexPath(item: item, section: 0))
-                photo.image = data
-                try? self.dataController.viewContext.save()
+    fileprivate func setCollectionViewLoadingState(_ isLoading: Bool) {
+        if isLoading {
+            let yAxis = (collectionView.frame.minY) + (collectionView.frame.maxY - collectionView.frame.minY)/2
+            activityIndicator.frame = CGRect(x: collectionView.frame.maxX/2, y: yAxis, width: 20, height: 20)
+            activityIndicator.color = UIColor.darkGray
+            activityIndicator.hidesWhenStopped = true
+            view.addSubview(activityIndicator)
+            DispatchQueue.main.async {
+                self.activityIndicator.startAnimating()
+                UIApplication.shared.beginIgnoringInteractionEvents()
+                self.collectionView.alpha = 0.5
             }
-            isDownloading = false
-            task.resume()
+        } else {
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                UIApplication.shared.endIgnoringInteractionEvents()
+                self.collectionView.alpha = 1.0
+            }
         }
-        completion(true, nil)
-        
-    }
-    
-    private func createPhotoURLsFrom(photos: [FlickrPhoto], size: String = "q") -> [URL] {
-        var urls = [URL]()
-        for photo in photos {
-            let photoURL = URL(string: "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret)_\(size).jpg")!
-            urls.append(photoURL)
-        }
-        return urls
     }
     
 }
