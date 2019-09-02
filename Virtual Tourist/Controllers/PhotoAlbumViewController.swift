@@ -44,6 +44,7 @@ class PhotoAlbumViewController: UIViewController, MKMapViewDelegate {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .trash, target: self, action: #selector(handleDelete))
         navigationItem.rightBarButtonItem?.isEnabled = false
+        newCollectionButton.isEnabled = false
         navigationItem.title = pin.name
         navigationController?.isNavigationBarHidden = false
     }

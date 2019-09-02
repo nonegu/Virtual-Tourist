@@ -36,6 +36,7 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
                 operation.start()
             }
         }) { (completed) in }
+        self.newCollectionButton.isEnabled = true
     }
     
     func setupFetchedResults() {
