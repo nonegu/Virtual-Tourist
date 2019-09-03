@@ -29,6 +29,7 @@ class PhotoAlbumViewController: UIViewController {
     
     var isDownloading = false
     
+    let itemPerPage = 18
     var pageNum = 0
     
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
@@ -41,7 +42,8 @@ class PhotoAlbumViewController: UIViewController {
         // MARK: Get photos for the pins that does not have saved photos.
         if fetchedResultsController.fetchedObjects?.count == 0 {
             isDownloading = true
-            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: pageNum, completion: handleGetSearchPhotosResults(totalPages:photos:error:))
+            setCollectionViewLoadingState(true)
+            FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: itemPerPage, page: pageNum, completion: handleGetSearchPhotosResults(totalPages:photos:error:))
         }
         
         setupLayout()
@@ -66,14 +68,14 @@ class PhotoAlbumViewController: UIViewController {
     @IBAction func newCollectionPressed(_ sender: UIButton) {
         setCollectionViewLoadingState(true)
         isDownloading = true
-        FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: 12, page: pageNum, completion: handleGetSearchPhotosResults(totalPages:photos:error:))
+        FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: itemPerPage, page: pageNum, completion: handleGetSearchPhotosResults(totalPages:photos:error:))
     }
     
     
     func handleGetSearchPhotosResults(totalPages: Int?, photos: [FlickrPhoto]?, error: Error?) {
+        isDownloading = false
         guard let photos = photos else {
             // if no FlickrPhoto received from the server, no future download will be made
-            isDownloading = false
             // collectionView should be reloaded to show "No images found" labelView
             collectionView.reloadData()
             print(error!)
@@ -83,11 +85,25 @@ class PhotoAlbumViewController: UIViewController {
             print(error!)
             return
         }
-        // randomizing page number to fetch different set of images
-        pageNum = Int.random(in: 0...totalPages)
+        // randomizing page number can return same images due to structure of flickr
+        // instead increasing pageNumber has higher chance to get different photos
+        if totalPages > pageNum {
+            pageNum += 1
+        } else {
+            pageNum = 0
+        }
         urls = createPhotoURLsFrom(photos: photos)
-        createPlaceholderPhotos(numberOfPhotos: (12 - fetchedResultsController.fetchedObjects!.count))
-        getPhotoData(urls: urls, completion: handleGetPhotoData(success:error:))
+        print(urls)
+        if urls != [] {
+            // if less then requested photo returned from the server, the app will only create cells for returned photos
+            isDownloading = true
+            createPlaceholderPhotos(numberOfPhotos: (urls.count - fetchedResultsController.fetchedObjects!.count))
+            getPhotoData(urls: urls, completion: handleGetPhotoData(success:error:))
+        } else {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
         
     }
     
@@ -103,12 +119,12 @@ class PhotoAlbumViewController: UIViewController {
     }
     
     func handleGetPhotoData(success: Bool, error: Error?) {
+        isDownloading = false
         if success {
             print(true)
         } else {
             print(error!)
         }
-        setCollectionViewLoadingState(false)
     }
     
     @objc func handleDelete() {
@@ -125,7 +141,7 @@ class PhotoAlbumViewController: UIViewController {
         try? dataController.viewContext.save()
     }
     
-    fileprivate func setCollectionViewLoadingState(_ isLoading: Bool) {
+    func setCollectionViewLoadingState(_ isLoading: Bool) {
         if isLoading {
             let yAxis = (collectionView.frame.minY) + (collectionView.frame.maxY - collectionView.frame.minY)/2
             activityIndicator.frame = CGRect(x: collectionView.frame.maxX/2, y: yAxis, width: 20, height: 20)

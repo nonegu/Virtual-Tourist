@@ -37,6 +37,7 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
             }
         }) { (completed) in }
         self.newCollectionButton.isEnabled = true
+        setCollectionViewLoadingState(false)
     }
     
     func setupFetchedResults() {
@@ -56,7 +57,6 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
     
     func getPhotoData(urls: [URL], completion: @escaping (Bool, Error?) -> Void) {
         for url in urls {
-            isDownloading = true
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 guard let data = data else {
                     completion(false, error!)
@@ -73,7 +73,6 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
                 photo.image = data
                 try? self.dataController.viewContext.save()
             }
-            isDownloading = false
             task.resume()
         }
         completion(true, nil)
