@@ -86,11 +86,11 @@ class PhotoAlbumViewController: UIViewController {
             // if no FlickrPhoto received from the server, no future download will be made
             // collectionView should be reloaded to show "No images found" labelView
             collectionView.reloadData()
-            print(error!)
+            presentError(title: "Getting Search Results Failed", message: error?.localizedDescription ?? "Unknown Error")
             return
         }
         guard let totalPages = totalPages else {
-            print(error!)
+            presentError(title: "Getting Search Results Failed", message: error?.localizedDescription ?? "Unknown Error")
             return
         }
         // randomizing page number can return same images due to structure of flickr
@@ -130,7 +130,7 @@ class PhotoAlbumViewController: UIViewController {
     func handleGetPhotoData(imageData: Data?, url: URL, error: Error?) {
         isDownloading = false
         guard let data = imageData else {
-            print("Downloading at \(url) has failed: \(error!.localizedDescription)")
+            presentError(title: "Downloading Images Failed", message: error?.localizedDescription ?? "Unknown Error")
             return
         }
         photoToUpdate(imageData: data, url: url)
