@@ -4,7 +4,11 @@ An iOS app that allows user to drop a pin anywhere on the map, and instantly bro
 This app is a part of Udacity iOS Develeoper Nanodegree.
 
 # Installation
-This project does not use any dependencies. Download the project, deploy it to your device or run it on the simulator.
+This project does not use any dependencies. 
+
+- Download the project
+- Put your API key into the FlickrAPI.swift file
+- Deploy it to your device or run it on the simulator.
 
 # How the app works?
 - When the app is opened for the first time, user will be met with a MapView.
