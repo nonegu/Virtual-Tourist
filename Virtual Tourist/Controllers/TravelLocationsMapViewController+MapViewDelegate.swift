@@ -85,7 +85,6 @@ extension TravelLocationsMapViewController: MKMapViewDelegate {
         latestLocation.longitudeDelta = region.span.longitudeDelta
         
         try? dataController.viewContext.save()
-        print("latitude: \(latestLocation.latitude) longitude: \(latestLocation.longitude)")
     }
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {

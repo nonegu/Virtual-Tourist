@@ -101,7 +101,6 @@ class PhotoAlbumViewController: UIViewController {
             pageNum = 0
         }
         urls = FlickrAPI.createPhotoURLsFrom(photos: photos)
-        print(urls)
         if urls != [] {
             // if less then requested photo returned from the server, the app will only create cells for returned photos
             isDownloading = true
