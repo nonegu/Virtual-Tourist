@@ -168,7 +168,7 @@ class PhotoAlbumViewController: UIViewController {
     func setCollectionViewLoadingState(_ isLoading: Bool) {
         if isLoading {
             let yAxis = (collectionView.frame.minY) + (collectionView.frame.maxY - collectionView.frame.minY)/2
-            activityIndicator.frame = CGRect(x: collectionView.frame.maxX/2, y: yAxis, width: 20, height: 20)
+            activityIndicator.frame = CGRect(x: view.frame.maxX/2, y: yAxis, width: 20, height: 20)
             activityIndicator.color = UIColor.darkGray
             activityIndicator.hidesWhenStopped = true
             view.addSubview(activityIndicator)
