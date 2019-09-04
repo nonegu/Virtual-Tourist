@@ -6,7 +6,7 @@
 //  Copyright © 2019 Creyto. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import CoreData
 
 extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
@@ -37,7 +37,9 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
             }
         }) { (completed) in }
         self.newCollectionButton.isEnabled = true
-        setCollectionViewLoadingState(false)
+        if UIApplication.shared.isIgnoringInteractionEvents {
+            setCollectionViewLoadingState(false)
+        }
     }
     
     func setupFetchedResults() {

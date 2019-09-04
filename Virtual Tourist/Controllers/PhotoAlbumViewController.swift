@@ -36,6 +36,7 @@ class PhotoAlbumViewController: UIViewController {
     
     var activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     
+    // MARK: Life-cycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -67,12 +68,17 @@ class PhotoAlbumViewController: UIViewController {
         collectionView.collectionViewLayout.invalidateLayout()
     }
     
+    // to avoid faulty notifications fetchedresultscontroller should be set to nil
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        fetchedResultsController = nil
+    }
+    
     @IBAction func newCollectionPressed(_ sender: UIButton) {
         setCollectionViewLoadingState(true)
         isDownloading = true
         FlickrAPI.getSearchPhotosResults(latitude: pin.latitude, longitude: pin.longitude, itemPerPage: itemPerPage, page: pageNum, completion: handleGetSearchPhotosResults(totalPages:photos:error:))
     }
-    
     
     func handleGetSearchPhotosResults(totalPages: Int?, photos: [FlickrPhoto]?, error: Error?) {
         isDownloading = false
