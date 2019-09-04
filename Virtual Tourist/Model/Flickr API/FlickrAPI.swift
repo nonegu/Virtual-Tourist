@@ -63,4 +63,24 @@ class FlickrAPI {
         task.resume()
     }
     
+    class func getPhotoData(url: URL, completion: @escaping (Data?, URL, Error?) -> Void) {
+        let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+            guard let data = data else {
+                completion(nil, url, error!)
+                return
+            }
+            completion(data, url, nil)
+        }
+        task.resume()
+    }
+    
+    class func createPhotoURLsFrom(photos: [FlickrPhoto], size: String = "q") -> [URL] {
+        var urls = [URL]()
+        for photo in photos {
+            let photoURL = URL(string: "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret)_\(size).jpg")!
+            urls.append(photoURL)
+        }
+        return urls
+    }
+    
 }

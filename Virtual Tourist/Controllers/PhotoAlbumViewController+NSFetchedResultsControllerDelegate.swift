@@ -55,37 +55,4 @@ extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
         }
     }
     
-    func getPhotoData(urls: [URL], completion: @escaping (Bool, Error?) -> Void) {
-        for url in urls {
-            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard let data = data else {
-                    completion(false, error!)
-                    return
-                }
-                // following will get the item number, and it will be used to updated related photos in CoreData
-                guard let item = urls.firstIndex(where: { (searchUrl) -> Bool in
-                    searchUrl.absoluteString == url.absoluteString
-                }) else {
-                    return
-                }
-                // the section will always be 0, since the database is constructed to hold single section.
-                let photo = self.fetchedResultsController.object(at: IndexPath(item: item, section: 0))
-                photo.image = data
-                try? self.dataController.viewContext.save()
-            }
-            task.resume()
-        }
-        completion(true, nil)
-        
-    }
-    
-    func createPhotoURLsFrom(photos: [FlickrPhoto], size: String = "q") -> [URL] {
-        var urls = [URL]()
-        for photo in photos {
-            let photoURL = URL(string: "https://farm\(photo.farm).staticflickr.com/\(photo.server)/\(photo.id)_\(photo.secret)_\(size).jpg")!
-            urls.append(photoURL)
-        }
-        return urls
-    }
-    
 }

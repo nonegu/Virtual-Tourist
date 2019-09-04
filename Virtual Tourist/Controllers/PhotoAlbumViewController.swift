@@ -19,10 +19,12 @@ class PhotoAlbumViewController: UIViewController {
     /// The pin whose photos are being displayed
     var pin: Pin!
     
+    // DataController will be created by dependency injection
     var dataController: DataController!
     
     var fetchedResultsController: NSFetchedResultsController<Photo>!
     
+    // To update the collectionView, BlockOperation will be used
     var blockOperations = [BlockOperation]()
     
     var urls = [URL]()
@@ -92,13 +94,15 @@ class PhotoAlbumViewController: UIViewController {
         } else {
             pageNum = 0
         }
-        urls = createPhotoURLsFrom(photos: photos)
+        urls = FlickrAPI.createPhotoURLsFrom(photos: photos)
         print(urls)
         if urls != [] {
             // if less then requested photo returned from the server, the app will only create cells for returned photos
             isDownloading = true
             createPlaceholderPhotos(numberOfPhotos: (urls.count - fetchedResultsController.fetchedObjects!.count))
-            getPhotoData(urls: urls, completion: handleGetPhotoData(success:error:))
+            for url in urls {
+                FlickrAPI.getPhotoData(url: url, completion: handleGetPhotoData(imageData:url:error:))
+            }
         } else {
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
@@ -118,13 +122,13 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
     
-    func handleGetPhotoData(success: Bool, error: Error?) {
+    func handleGetPhotoData(imageData: Data?, url: URL, error: Error?) {
         isDownloading = false
-        if success {
-            print(true)
-        } else {
-            print(error!)
+        guard let data = imageData else {
+            print("Downloading at \(url) has failed: \(error!.localizedDescription)")
+            return
         }
+        photoToUpdate(imageData: data, url: url)
     }
     
     @objc func handleDelete() {
@@ -139,6 +143,20 @@ class PhotoAlbumViewController: UIViewController {
             dataController.viewContext.delete(photoToDelete)
         }
         try? dataController.viewContext.save()
+    }
+    
+    func photoToUpdate(imageData: Data, url: URL) {
+        // following will get the item number, and it will be used to updated related photos in CoreData
+        guard let item = urls.firstIndex(where: { (searchUrl) -> Bool in
+            searchUrl.absoluteString == url.absoluteString
+        }) else {
+            return
+        }
+        // the section will always be 0, since the database is constructed to hold single section.
+        let indexPath = IndexPath(item: item, section: 0)
+        let photo = fetchedResultsController.object(at: indexPath)
+        photo.image = imageData
+        
     }
     
     func setCollectionViewLoadingState(_ isLoading: Bool) {
