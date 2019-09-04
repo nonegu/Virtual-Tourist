@@ -13,8 +13,12 @@ import CoreData
 extension TravelLocationsMapViewController: MKMapViewDelegate {
     
     func addAnnotation(with coordinate: CLLocationCoordinate2D) {
+        activityIndicator.startAnimating()
+        UIApplication.shared.beginIgnoringInteractionEvents()
         let annotation = MKPointAnnotation()
         placeNameForCoordinate(coordinate: coordinate) { (placeName, error) in
+            self.activityIndicator.stopAnimating()
+            UIApplication.shared.endIgnoringInteractionEvents()
             if let error = error {
                 print("No place found: \(error.localizedDescription)")
                 annotation.coordinate = coordinate
